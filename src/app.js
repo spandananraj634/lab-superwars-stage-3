@@ -21,39 +21,47 @@ const PLAYERS = [
     "Slingo"
 ];
 
-// initialize players with image and strength
+// Initialize players with image and strength
 const initPlayers = (players) => {
-    let detailedPlayers = '';
+    return players.map((player, index) => ({
+        name: player,
+        strength: getRandomStrength(),
+        image: "images/super-" + (index + 1) + ".png",
+        type: index % 2 === 0 ? 'hero' : 'villain'
+    }));
+};
 
-    // Instead of forloop use Map method
-    // Code here
-
-    return detailedPlayers;
-}
-
-// getting random strength
+// Getting random strength
 const getRandomStrength = () => {
+    // Return a random integer (1,100]
     return Math.ceil(Math.random() * 100);
-}
+};
 
-// Build player template
-const buildPlayers = (players, type) => {
-    let fragment = '';
+// Build HTML for players
+const buildPlayersHTML = (players, type) => {
+    return players
+        .filter(player => player.type === type)
+        .map(player => `
+            <div class="player">
+                <img src="${player.image}" alt="${player.name}">
+                <div class="name">${player.name}</div>
+                <div class="strength">${player.strength}</div>
+            </div>
+        `)
+        .join('');
+};
 
-    // Instead of using for loop
-    // Use chaining of Array methods - filter, map and join
-    // Type your code here
-
-    return fragment;
-}
 
 // Display players in HTML
 const viewPlayers = (players) => {
-    document.getElementById('heroes').innerHTML = buildPlayers(players, 'hero');
-    document.getElementById('villains').innerHTML = buildPlayers(players, 'villain');
-}
+    const heroesHTML = buildPlayersHTML(players, 'hero');
+    const villainsHTML = buildPlayersHTML(players, 'villain');
 
+    document.getElementById('heroes').innerHTML = heroesHTML;
+    document.getElementById('villains').innerHTML = villainsHTML;
+};
 
 window.onload = () => {
-    viewPlayers(initPlayers(PLAYERS));
-}
+    const players = initPlayers(PLAYERS);
+    viewPlayers(players);
+};
